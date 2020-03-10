@@ -1,0 +1,74 @@
+{
+    "fastp" :
+    {
+        "ncore" : 6,
+        "memo" : 6000,
+        "jobtime" : "03:59",
+        "jobname" : "{rule}_{wildcards.sample}",
+        "logi" : "log_folder/fastp/{rule}_{wildcards.sample}.log"
+    },
+    "split_fastq" :
+    {
+        "ncore" : 6,
+        "memo" : 3000,
+        "jobtime" : "23:59",
+        "jobname" : "{rule}_{wildcards.sample}",
+        "logi" : "log_folder/split_fastq/{rule}_{wildcards.sample}.log"
+    },
+    "alignment" :
+    {
+        "ncore" : 12,
+        "memo" : 3000,
+        "jobtime" : "47:59",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}_{wildcards.flowcell}_{wildcards.lane}",
+        "logi" : "log_folder/alignment/{rule}_{wildcards.reference}_{wildcards.sample}_{wildcards.flowcell}_{wildcards.lane}.log"
+    },
+    "sambamba_sort" :
+    {
+        "ncore" : 6,
+        "memo" : 2500,
+        "jobtime" : "03:59",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}_{wildcards.flowcell}_{wildcards.lane}",
+        "logi" : "log_folder/sambamba_sort/{rule}_{wildcards.reference}_{wildcards.sample}_{wildcards.flowcell}_{wildcards.lane}.log"
+    },
+    "sambamba_merge" :
+    {
+        "ncore" : 6,
+        "memo" : 3000,
+        "jobtime" : "03:59",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}",
+        "logi" : "log_folder/sambamba_merge/{rule}_{wildcards.reference}_{wildcards.sample}.log"
+    },
+    "sambamba_flagstat_1" :
+    {
+        "ncore" : 3,
+        "memo" : 4000,
+        "jobtime" : "03:59",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}",
+        "logi" : "log_folder/sambamba_flagstat_1/{rule}_{wildcards.reference}_{wildcards.sample}.log"
+    },
+    "mark_duplicates" :
+    {
+        "ncore" : 6,
+        "memo" : 7500,
+        "jobtime" : "23:59",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}",
+        "logi" : "log_folder/mark_duplicates/{rule}_{wildcards.reference}_{wildcards.sample}.log"
+    },
+    "build_index" :
+    {
+        "ncore" : 6,
+        "memo" : 2000,
+        "jobtime" : "03:59",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}",
+        "logi" : "log_folder/build_index/{rule}_{wildcards.sample}.log"
+    },
+    "sambamba_flagstat_2" :
+    {
+        "ncore" : 3,
+        "memo" : 4000,
+        "jobtime" : "03:59",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}",
+        "logi" : "log_folder/sambamba_flagstat_2/{rule}_{wildcards.sample}.log"
+    }
+}

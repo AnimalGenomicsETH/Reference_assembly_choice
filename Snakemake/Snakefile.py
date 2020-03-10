@@ -1,0 +1,140 @@
+#Kind reminder for (a) the generation of folders and sub-folders for the logs and (b) the preparation of raw data and reference genomes as described in the documentation
+
+configfile: "config.yaml"
+sample = config["samples"]
+reference = config["references"]
+
+# Reduced paths
+raw_data_path = config["resources"]["raw"]
+fastp_output = config["fold_out"]["fastp"]
+split_fastq = config["fold_out"]["split_fastq"]
+alignment = config["fold_out"]["alignment"]
+sorted_alignment = config["fold_out"]["sorted_alignment"]
+dedup_alignment = config["fold_out"]["dedup_alignment"]
+reference_path = config["resources"]["reference"]
+
+# Tools
+FASTP = config["tools"]["fastp"]
+LOAD_PYTHON_374 = config["tools"]["load_python_374"]
+FASTQ_SPLITTER = config["tools"]["fastq_splitter"]
+LOAD_BWA = config["tools"]["load_bwa"]
+LOAD_SAMTOOLS = config["tools"]["load_samtools"]
+SAMBLASTER = config["tools"]["samblaster"]
+SAMBAMBA = config["tools"]["sambamba"]
+LOAD_PICARD_TOOLS = config["tools"]["load_picard_tools"]
+LOAD_JAVA = config["tools"]["load_java_jdk"]
+PICARD_TOOLS = config["tools"]["picard_tools"]
+
+rule all:
+    input:
+        stats_1=expand(sorted_alignment + "{reference}/{sample}/{sample}.stats",sample=sample,reference=reference),
+        stats_2=expand(dedup_alignment + "{reference}/{sample}/{sample}.stats",sample=sample,reference=reference),
+        index=expand(dedup_alignment + "{reference}/{sample}/{sample}.bam.bai",sample=sample,reference=reference)
+
+rule fastp:
+    input:
+        R1 = raw_data_path + "{sample}_R1.fastq.gz",
+        R2 = raw_data_path + "{sample}_R2.fastq.gz"
+    output:
+        R1_O = temp(fastp_output + "{sample}/{sample}_R1.fastq.gz"),
+        R2_O = temp(fastp_output + "{sample}/{sample}_R2.fastq.gz"),
+        R_HTML = fastp_output + "{sample}/{sample}_fastp.html",
+        R_JSON = fastp_output + "{sample}/{sample}_fastp.json"
+    params:
+        "-q 15 -u 40 -g"
+    shell:
+        FASTP + 
+        " -i {input.R1} -o {output.R1_O} -I {input.R2} -O {output.R2_O} -h {output.R_HTML} -j {output.R_JSON} {params} >/dev/null"
+
+checkpoint split_fastq:
+    input:
+        R1 = fastp_output + "{sample}/{sample}_R1.fastq.gz",
+        R2 = fastp_output + "{sample}/{sample}_R2.fastq.gz"
+    output:
+        split_fastqs = temp(directory(split_fastq + "{sample}/"))
+    params:
+        prefix = split_fastq + "{sample}/{sample}_"
+    shell:
+        LOAD_PYTHON_374 + FASTQ_SPLITTER + " -o {params.prefix} {input.R1} {input.R2}"
+
+rule alignment:
+    input:
+        R1 = split_fastq + "{sample}/{sample}_{flowcell}_{lane}_R1.fq.gz",
+        R2 = split_fastq + "{sample}/{sample}_{flowcell}_{lane}_R2.fq.gz",
+        ref = reference_path + "{reference}_ref.fa"
+    output:
+        BAM = temp(alignment + "{reference}/{sample}/{sample}_{flowcell}_{lane}.bam")
+    params:
+        rg="@RG\\tID:{flowcell}.{lane}\\tCN:TUM\\tLB:{sample}\\tPL:illumina\\tPU:{flowcell}:{lane}\\tSM:{sample}",
+        bwa_mem = "-M -t 12 -R"
+    shell:
+        LOAD_BWA + LOAD_SAMTOOLS +
+        "bwa mem {params.bwa_mem} '{params.rg}' {input.ref} {input.R1} {input.R2} | " + 
+        SAMBLASTER + " -M | samtools view -Sb - > {output.BAM}"
+
+rule sambamba_sort:
+    input:
+        BAM = alignment + "{reference}/{sample}/{sample}_{flowcell}_{lane}.bam"
+    output:
+        sorted_BAM = temp(sorted_alignment + "{reference}/{sample}/{sample}_{flowcell}_{lane}.bam")
+    shell:
+        SAMBAMBA + " sort -t 6 --out {output.sorted_BAM} {input.BAM}"
+
+def list_files(wildcards):
+    checkpoint_output = checkpoints.split_fastq.get(sample = wildcards.sample).output.split_fastqs
+    all_wildcards = glob_wildcards(os.path.join(checkpoint_output, "{sample}_{flowcell}_{lane}_R1.fq.gz"))
+    all_files = []
+    for sample, flowcell, lane in zip(all_wildcards.sample, all_wildcards.flowcell, all_wildcards.lane):
+        all_files.append(f"{sorted_alignment}" + "{reference}" + f"/{sample}/{sample}_{flowcell}_{lane}.bam")
+    return(all_files) 
+
+rule sambamba_merge:
+    input: list_files
+    output: temp(sorted_alignment + "{reference}/{sample}/{sample}.bam")
+    run:
+        if len(input) == 1:
+            shell("mv {input} {output} \n" + "mv {input}.bai {output}.bai")
+        else:
+            shell(SAMBAMBA + " merge -t 6 {output} {input}")
+
+rule sambamba_flagstat_1:
+    input:
+        BAM = sorted_alignment + "{reference}/{sample}/{sample}.bam"
+    output:
+        Stats = sorted_alignment + "{reference}/{sample}/{sample}.stats"
+    params:
+        threads = "--nthreads 10"
+    shell:
+        SAMBAMBA + " flagstat -t 3 {params.threads} {input.BAM} > {output.Stats}"
+
+rule mark_duplicates:
+    input:
+        sorted_alignment + "{reference}/{sample}/{sample}.bam"
+    output:
+        bam= dedup_alignment + "{reference}/{sample}/{sample}.bam",
+        metrics= dedup_alignment +"{reference}/{sample}/{sample}.metrics.txt"
+    shell:
+        LOAD_PICARD_TOOLS +
+        LOAD_JAVA +
+        PICARD_TOOLS + " MarkDuplicates I={input} O={output.bam} M={output.metrics}"
+
+rule build_index:
+    input:
+        dedup_alignment + "{reference}/{sample}/{sample}.bam"
+    output:
+        dedup_alignment + "{reference}/{sample}/{sample}.bam.bai"
+    shell:
+        LOAD_PICARD_TOOLS +
+        LOAD_JAVA +
+        PICARD_TOOLS + " BuildBamIndex I={input} O={output}"
+
+
+rule sambamba_flagstat_2:
+    input:
+        BAM = dedup_alignment + "{reference}/{sample}/{sample}.bam"
+    output:
+        Stats = dedup_alignment + "{reference}/{sample}/{sample}.stats"
+    params:
+        threads = "--nthreads 10"
+    shell:
+        SAMBAMBA + " flagstat -t 3 {params.threads} {input.BAM} > {output.Stats}"
