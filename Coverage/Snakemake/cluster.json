@@ -1,0 +1,18 @@
+{
+    "mosdepth" :
+    {
+        "ncore" : 4,
+        "memo" : 1500,
+        "jobtime" : "03:59",
+        "jobname" : "{rule}_{wildcards.sample}_{wildcards.reference}",
+        "logi" : "log_folder/{rule}_{wildcards.sample}_{wildcards.reference}.log"
+    },
+    "summary_cov":
+    {
+        "ncore" : 1,
+        "memo" : 1000,
+        "jobtime" : "03:59",
+        "jobname" : "{rule}_{wildcards.reference}",
+        "logi" : "log_folder/{rule}_{wildcards.reference}.log"
+    }
+}
