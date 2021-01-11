@@ -1,6 +1,6 @@
 cd $TMPDIR
 
-export LD_LIBRARY_PATH=/cluster/work/pausch/group_bin/htslib/
+export LD_LIBRARY_PATH=/path/to/software/htslib/
 
 for chr in {1..32}
 do
@@ -14,7 +14,7 @@ if [[ $chr = "32" ]]; then
 	chr=MT
 fi
 
-/cluster/work/pausch/group_bin/mosdepth -c $chr $3 $1
+/path/to/software/mosdepth -Q 10 -c $chr $3 $1
 
 if [[ $chr != "X" ]]; then
 coverage_sum=`zcat $4 | awk '{ total += ($3-$2)*$4; count++ } END {print total}'`;length=`zcat $4 | tail -n 1 | awk '{print $3}'`; coverage=`printf %.2f $(echo $coverage_sum/$length | bc -l)`; echo $1 $chr $length $coverage >> $2

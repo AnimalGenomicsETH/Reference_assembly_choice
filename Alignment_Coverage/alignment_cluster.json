@@ -18,7 +18,7 @@
     "alignment" :
     {
         "ncore" : 12,
-        "memo" : 3000,
+        "memo" : 3500,
         "jobtime" : "47:59",
         "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}_{wildcards.flowcell}_{wildcards.lane}",
         "logi" : "log_folder/alignment/{rule}_{wildcards.reference}_{wildcards.sample}_{wildcards.flowcell}_{wildcards.lane}.log"
@@ -61,7 +61,7 @@
         "memo" : 2000,
         "jobtime" : "03:59",
         "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}",
-        "logi" : "log_folder/build_index/{rule}_{wildcards.sample}.log"
+        "logi" : "log_folder/build_index/{rule}_{wildcards.reference}_{wildcards.sample}.log"
     },
     "sambamba_flagstat_2" :
     {
@@ -69,6 +69,22 @@
         "memo" : 4000,
         "jobtime" : "03:59",
         "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}",
-        "logi" : "log_folder/sambamba_flagstat_2/{rule}_{wildcards.sample}.log"
+        "logi" : "log_folder/sambamba_flagstat_2/{rule}_{wildcards.reference}_{wildcards.sample}.log"
+    },
+    "picard_metrics" :
+    {
+        "ncore" : 8,
+        "memo" : 3000,
+        "jobtime" : "03:59",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}",
+        "logi" : "log_folder/{rule}/{rule}_{wildcards.reference}_{wildcards.sample}.log"
+    },
+    "samtools_idxstats" :
+    {
+        "ncore" : 1,
+        "memo" : 250,
+        "jobtime" : "00:59",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}",
+        "logi" : "log_folder/{rule}/{rule}_{wildcards.reference}_{wildcards.sample}.log"
     }
 }

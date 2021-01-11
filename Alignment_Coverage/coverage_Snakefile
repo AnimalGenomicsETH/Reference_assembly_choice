@@ -12,18 +12,18 @@ get_coverage = config["tools"]["get_coverage"]
 average_coverage = config["tools"]["average_coverage"]
 
 rule all:
-    input: expand(coverage_path + "{reference}/summary_coverage.txt",reference=reference)
+	input: expand(coverage_path + "{reference}/summary_coverage.txt",reference=reference)
 
 rule mosdepth:
-    input:
-        dedup_bam + "{reference}/{sample}/{sample}.bam"
-    output:
-        coverage_path + "{reference}/{sample}.coverage"
-    params:
-        output = coverage_path + "{reference}/{sample}.output",
-        bed = coverage_path + "{reference}/{sample}.output.per-base.bed.gz"
-    shell:
-        get_coverage + "{input} {output} {params.output} {params.bed}"
+	input:
+		dedup_bam + "{reference}/{sample}/{sample}.bam"
+	output:
+		coverage_path + "{reference}/{sample}.coverage"
+	params:
+		output = coverage_path + "{reference}/{sample}.output",
+		bed = coverage_path + "{reference}/{sample}.output.per-base.bed.gz"
+	shell:
+		get_coverage + "{input} {output} {params.output} {params.bed}"
 
 rule summary_cov:
 	input:
@@ -32,4 +32,4 @@ rule summary_cov:
 	output:
 		coverage = coverage_path + "{reference}/summary_coverage.txt"
 	script:
-		"/cluster/work/pausch/temp_scratch/audald/variant_analyses/coverage/average_coverage.py"
+		"average_coverage.py"

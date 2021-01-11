@@ -1,0 +1,29 @@
+{
+"samples":['sample_1','samples_2','samples_160','sample_161'],
+"references": ['UCD','Angus'],
+    "resources":{
+        "raw":"/path/to/fastq/",
+        "reference":"/path/to/ref/genome/"
+    },
+    "tools":{
+        "fastp":"/path/to/software/fastp",
+        "load_python_374":"module load python_gpu/3.7.4 \n",
+        "load_bwa":"module load bwa/0.7.17 \n",
+        "load_samtools":"module load samtools/1.6 \n",
+        "fastq_splitter":"/path/to/software//gdc-fastq-splitter/venv/bin/gdc-fastq-splitter",
+        "samblaster":"/path/to/software//samblaster/samblaster",
+        "sambamba":"/path/to/software//sambamba_v0.6.6",
+        "load_picard_tools":"module load picard/2.18.17 \n",
+        "load_java_jdk":"module load jdk \n",
+        "load_r":"module load r/3.6.1 \n",
+        "picard_tools":"java -jar /path/to/software//gcc-4.8.5/picard-2.18.17-jiviugfnvhk4qlzbcugx6bpzixgb7znb/bin/picard.jar"
+    },
+    "fold_out":{
+        "fastp":"/path/output/fastp/",
+        "split_fastq":"/path/output/split_fastq/",
+        "alignment":"/path/output/alignment/",
+        "sorted_alignment":"/path/output/sorted_alignment/",
+        "dedup_alignment":"/path/output/dedup_alignment/",
+        "picard_metrics":"/path/output/Picard_metrics/"
+    }
+}

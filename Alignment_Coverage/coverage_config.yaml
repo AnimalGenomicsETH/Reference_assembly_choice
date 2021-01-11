@@ -1,0 +1,15 @@
+{
+    "samples":['sample_1','samples_2','samples_160','sample_161'],
+    "references": ['UCD','Angus'],
+    "resources":{
+        "dedup_bam":"/path/to/BAM/",
+        "info_file":"/path/to/sample_information.csv"
+    },
+    "tools":{
+        "get_coverage":"bash get_coverage.sh ",
+        "average_coverage":"python3 average_coverage.py "
+    },
+    "fold_out":{
+        "coverage":"/path/output/"
+    }
+}
