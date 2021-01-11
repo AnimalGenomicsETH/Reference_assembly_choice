@@ -1,4 +1,4 @@
-# Best_assembly
+# Reference_assembly_choice
 Repository including scripts and workflows for the "Best Assembly" project:
 
 * Alignment folder contains description, steps and Snakemake for complete alignment of raw data with different assemblies
