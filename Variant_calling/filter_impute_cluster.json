@@ -1,0 +1,74 @@
+{
+    "select_SNP":
+    {
+        "ncore" : 4,
+        "memo" : 2000,
+        "jobtime" : "04:00",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.chromosome}",
+        "logi" : "log_folder/{rule}/{rule}_{wildcards.reference}_{wildcards.chromosome}.log"
+    },
+    "filter_SNP":
+    {
+        "ncore" : 4,
+        "memo" : 2000,
+        "jobtime" : "04:00",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.chromosome}",
+        "logi" : "log_folder/{rule}/{rule}_{wildcards.reference}_{wildcards.chromosome}.log"
+    },
+    "select_indel":
+    {
+        "ncore" : 4,
+        "memo" : 2000,
+        "jobtime" : "04:00",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.chromosome}",
+        "logi" : "log_folder/{rule}/{rule}_{wildcards.reference}_{wildcards.chromosome}.log"
+    },
+    "filter_indel":
+    {
+        "ncore" : 4,
+        "memo" : 2000,
+        "jobtime" : "04:00",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.chromosome}",
+        "logi" : "log_folder/{rule}/{rule}_{wildcards.reference}_{wildcards.chromosome}.log"
+    },
+    "merge_variants":
+    {
+        "ncore" : 4,
+        "memo" : 2000,
+        "jobtime" : "04:00",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.chromosome}",
+        "logi" : "log_folder/{rule}/{rule}_{wildcards.reference}_{wildcards.chromosome}.log"
+    },
+    "remove_filtered":
+    {
+        "ncore" : 4,
+        "memo" : 2000,
+        "jobtime" : "04:00",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.chromosome}",
+        "logi" : "log_folder/{rule}/{rule}_{wildcards.reference}_{wildcards.chromosome}.log"
+    },
+    "beagle_imputation":
+    {
+        "ncore" : 18,
+        "memo" : 1500,
+        "jobtime" : "24:00",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.chromosome}",
+        "logi" : "log_folder/{rule}/{rule}_{wildcards.reference}_{wildcards.chromosome}.log"
+    },
+    "index_creation":
+    {
+        "ncore" : 4,
+        "memo" : 750,
+        "jobtime" : "04:00",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.chromosome}",
+        "logi" : "log_folder/{rule}/{rule}_{wildcards.reference}_{wildcards.chromosome}.log"
+    },
+    "stats_creation":
+    {
+        "ncore" : 4,
+        "memo" : 750,
+        "jobtime" : "04:00",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.chromosome}",
+        "logi" : "log_folder/{rule}/{rule}_{wildcards.reference}_{wildcards.chromosome}.log"
+    }
+}

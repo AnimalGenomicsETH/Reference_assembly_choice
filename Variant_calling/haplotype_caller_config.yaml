@@ -1,0 +1,16 @@
+{
+    "samples":['sample_1','samples_2','samples_160','sample_161'],
+    "references": ['UCD','Angus'],
+    "resources":{
+        "reference":"/path/to/reference/genome/",
+        "dedup_bam":"/path/to/deduplicated/BAM/"
+    },
+    "tools":{
+        "GATK4":"/path/to/software/gatk-4.1.4.1/gatk",
+        "BEAGLE":"/path/to/software/beagle.27Jan18.7e1.jar",
+        "JAVA":"module load gcc/4.8.2 java/1.8.0_73 \n"
+    },
+    "fold_out":{
+        "GATK":"/path/to/output/"
+    }
+}

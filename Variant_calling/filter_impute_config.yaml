@@ -1,0 +1,18 @@
+{
+    "chromosomes": ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29'],
+    "references": ['UCD','Angus'],
+    "resources":{
+        "reference":"/path/to/reference/genome/",
+        "VCF":"path/to/input/VCF/"
+    },
+    "tools":{
+        "GATK4":"/path/to/software/software/gatk-4.1.4.1/gatk",
+        "BEAGLE":"/path/to/software/beagle.27Jan18.7e1.jar",
+        "BCFTOOLS":"/path/to/software/bcftools-1.8/bcftools",
+        "JAVA":"module load gcc/4.8.2 java/1.8.0_73 \n",
+        "tabix": "/path/to/software/htslib-1.8/tabix"
+    },
+    "fold_out":{
+        "vcf_beagle":"/path/to/output/files/"
+    }
+}

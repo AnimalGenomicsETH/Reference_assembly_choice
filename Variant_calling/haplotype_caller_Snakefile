@@ -1,0 +1,80 @@
+configfile: "config.yaml"
+sample = config["samples"]
+reference = config["references"]
+
+# Reduced paths
+dedup_bam = config["resources"]["dedup_bam"]
+reference_path = config["resources"]["reference"]
+GATK_path = config["fold_out"]["GATK"]
+
+# Tools
+GATK4 = config["tools"]["GATK4"]
+BEAGLE = config["tools"]["BEAGLE"]
+LOAD_JAVA = config["tools"]["JAVA"]
+
+##Parsing wildcards
+chr_list = list(range(1,30))+["X", "Y"]
+int_list=" ".join (   [f"-L {mychr}" for mychr in chr_list   ]     )
+print (f"Number of samples: {len (sample)}" )
+print (sample)
+
+
+rule all:
+    input:
+        expand (GATK_path + "gvcf/{reference}/{chromosome}/{sample}_{chromosome}.g.vcf.gz", reference=reference, chromosome=chr_list, sample=sample)
+
+rule recalibrator_creator:
+    input:
+        bam = dedup_bam + "{reference}/{sample}/{sample}.bam",
+        ref = reference_path + "{reference}_ref.fa",
+        db = reference_path + "{reference}_SNP_DB.vcf.gz"
+    output:
+        temp(GATK_path + "bam_recal/{reference}/{sample}_recalibrator.table")
+    params:
+        chr = int_list
+    shell:
+        LOAD_JAVA +
+        GATK4 +
+        " BaseRecalibrator " +
+        " -I {input.bam} " +
+        " {params.chr} " +
+        " -R {input.ref} " +
+        " --known-sites {input.db} " +
+        " -O {output}"
+
+rule base_recalibrator:
+    input:
+        recal = rules.recalibrator_creator.output,
+        bam = dedup_bam + "{reference}/{sample}/{sample}.bam",
+        ref = reference_path + "{reference}_ref.fa"
+    output:
+        temp(GATK_path + "bam_recal/{reference}/{sample}_recalibrated.bam")
+    params:
+        chr = int_list
+    shell:
+        LOAD_JAVA +
+        GATK4 +
+        " ApplyBQSR " +
+        " -R {input.ref} " +
+        " {params.chr} " +
+        " -I {input.bam} " +
+        " --bqsr-recal-file {input.recal} " +
+        " -O {output} "
+
+rule haplotype_caller:
+    input:
+        recal_bam = rules.base_recalibrator.output,
+        ref = reference_path + "{reference}_ref.fa"
+    output:
+        GATK_path + "gvcf/{reference}/{chromosome}/{sample}_{chromosome}.g.vcf.gz"
+    params:
+        chr = "{chromosome}"
+    shell:
+        LOAD_JAVA +
+        GATK4 +
+        " HaplotypeCaller " +
+        " -I {input.recal_bam} " +
+        " -R {input.ref} " +
+        " -L {params.chr} " +
+        " -O {output} " +
+        " --ERC GVCF "

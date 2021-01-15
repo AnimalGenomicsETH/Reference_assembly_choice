@@ -1,0 +1,26 @@
+{
+    "recalibrator_creator" :
+    {
+        "ncore" : 6,
+        "memo" : 4000,
+        "jobtime" : "23:59",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}",
+        "logi" : "log_folder/recalibrator_creator/{rule}_{wildcards.reference}_{wildcards.sample}.log"
+   },
+    "base_recalibrator" :
+    {
+        "ncore" : 6,
+        "memo" : 4000,
+        "jobtime" : "23:59",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}",
+        "logi" : "log_folder/base_recalibrator/{rule}_{wildcards.reference}_{wildcards.sample}.log"
+    },
+    "haplotype_caller" :
+    {
+        "ncore" : 4,
+        "memo" : 6000,
+        "jobtime" : "23:59",
+        "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}_{wildcards.chromosome}",
+        "logi" : "log_folder/haplotype_caller/{rule}_{wildcards.reference}_{wildcards.sample}_{wildcards.chromosome}.log"
+    }
+}
