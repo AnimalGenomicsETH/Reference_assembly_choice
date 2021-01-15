@@ -4,7 +4,7 @@ This repository contains the main workflows generated for assessing the impact o
 
 1. Alignment pipeline and mapping statistics
 
-Snakemake workflow developed for aligning the raw data to the reference genome and retrieving the main mapping statistics from the aligned files. The workflow can be seen [here](/Alignment)
+Snakemake workflow developed for aligning the raw data to the reference genome and retrieving the main mapping statistics from the aligned files. The workflow can be seen [here](/Alignment).
 
 2. Sequence variant genotyping, variant calling and imputation
 
