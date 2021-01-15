@@ -4,15 +4,15 @@ This repository contains the main workflows generated for assessing the impact o
 
 1. Alignment pipeline and mapping statistics
 
-Snakemake workflow developed for aligning the raw data to the reference genome and retrieving the main mapping statistics from the aligned files. The workflow can be seen [here](Alignment_Coverage)
+Snakemake workflow developed for aligning the raw data to the reference genome and retrieving the main mapping statistics from the aligned files. The workflow can be seen [here](/Alignment)
 
-2. Sequence variant genotyping and variant statistics
+2. Sequence variant genotyping, variant calling and imputation
 
-Snakemake and bash workflows developed for variant genotyping can be seen [here](Variant_calling). Separate pipelines are developed for the following sections:
+Snakemake and bash workflows developed for variant genotyping can be seen [here](/Variant_calling). Separate pipelines are developed for the following sections:
 
 * Haplotype caller
 * Joing genotyping
-* Filtration and imputation
+* Variant filtration and imputation
 
 ---------------------------------------
 
