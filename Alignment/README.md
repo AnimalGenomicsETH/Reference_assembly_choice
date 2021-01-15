@@ -1,4 +1,4 @@
-# Alignment quality and depth of coverage
+# Alignment and mapping statistics
 
 ### Workflow
 
