@@ -1,24 +1,25 @@
 # Investigating the impact of reference assembly choice on genomic analyses in a cattle breed
 
-This repository contains the main workflows generated for assessing the impact of bovine reference assembly choice on genomic analysis. Structure of the repository:
+This repository contains the main workflows generated for assessing the impact of the reference assembly choice on bovine genomic analyses. The repository is split into two main sections:
 
-1. Alignment pipeline and mapping statistics
+1. [Alignment pipeline and mapping statistics](/Alignment)
 
-Snakemake workflow developed for aligning the raw data to the reference genome and retrieving the main mapping statistics from the aligned files. The workflow can be seen [here](/Alignment).
+* [`Snakemake` workflow](/Alignment/Pipeline) developed for aligning raw data (`FASTQ` files) to a reference genome.
+*  Main [mapping statistics](/Alignment/Mapping_stats) extracted out of the aligned files (`BAM`).
 
-2. Sequence variant genotyping, variant calling and imputation
+2. [Sequence variant genotyping, variant calling and imputation](/Variant_calling)
 
-Snakemake and bash workflows developed for variant genotyping can be seen [here](/Variant_calling). Separate pipelines are developed for the following sections:
+* [`Snakemake` and `bash` workflows](/Variant_calling/Pipelines) developed for variant genotyping. Separate pipelines are developed for the following processes:
 
-* Haplotype caller
-* Joing genotyping
-* Variant filtration and imputation
+    * [Haplotype caller](/Variant_calling/Pipelines/Haplotype_caller)
+    * [Joing genotyping](/Variant_calling/Pipelines/Joint_genotyping)
+    * [Variant filtration and imputation](/Variant_calling/Pipelines/Filter_impute)
 
 ---------------------------------------
 
-Developed for analysis of bovine genomes, but should be applicable to the other species as well.
+Developed for analysis of bovine genomes, should be applicable to the other species as well.
 
-Please cite below when using the pipeline/scripts in your research:
+Did you use the pipeline/scripts for your research? Please, cite as indicated below:
 
 ```
 Lloret-Villas, et. al. Investigating the impact of reference assembly choice on genomic analyses in a cattle breed. Biorxiv
