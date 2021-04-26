@@ -16,7 +16,8 @@
         "load_picard_tools":"module load picard/2.18.17 \n",
         "load_java_jdk":"module load jdk \n",
         "load_r":"module load r/3.6.1 \n",
-        "picard_tools":"java -jar /path/to/software//gcc-4.8.5/picard-2.18.17-jiviugfnvhk4qlzbcugx6bpzixgb7znb/bin/picard.jar"
+        "picard_tools":"java -jar /path/to/software//gcc-4.8.5/picard-2.18.17-jiviugfnvhk4qlzbcugx6bpzixgb7znb/bin/picard.jar",
+        "sam_flags_script":"bash path/to/software/MQ_sam_reads.sh ",
     },
     "fold_out":{
         "fastp":"/path/output/fastp/",
@@ -24,6 +25,7 @@
         "alignment":"/path/output/alignment/",
         "sorted_alignment":"/path/output/sorted_alignment/",
         "dedup_alignment":"/path/output/dedup_alignment/",
-        "picard_metrics":"/path/output/Picard_metrics/"
+        "picard_metrics":"/path/output/Picard_metrics/",
+        "map_stats":"/path/output/mapping_stats/"
     }
 }

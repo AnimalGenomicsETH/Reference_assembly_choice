@@ -86,5 +86,13 @@
         "jobtime" : "00:59",
         "jobname" : "{rule}_{wildcards.reference}_{wildcards.sample}",
         "logi" : "log_folder/{rule}/{rule}_{wildcards.reference}_{wildcards.sample}.log"
+    },
+    "sam_flags" :
+    {
+        "ncore" : 2,
+        "memo" : 500,
+        "jobtime" : "03:59",
+        "jobname" : "{rule}_{wildcards.sample}_{wildcards.reference}_{wildcards.chrm}",
+        "logi" : "log_folder/{rule}_{wildcards.sample}_{wildcards.reference}_{wildcards.chrm}.log"
     }
 }

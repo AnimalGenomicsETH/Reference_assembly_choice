@@ -1,6 +1,7 @@
 configfile: "config.yaml"
 sample = config["samples"]
 reference = config["references"]
+chr_list = list(range(1,30))
 
 # Reduced paths
 raw_data_path = config["resources"]["raw"]
@@ -11,6 +12,8 @@ sorted_alignment = config["fold_out"]["sorted_alignment"]
 dedup_alignment = config["fold_out"]["dedup_alignment"]
 picard_metrics = config["fold_out"]["picard_metrics"]
 reference_path = config["resources"]["reference"]
+map_stats = config["fold_out"]["map_stats"]
+
 
 # Tools
 FASTP = config["tools"]["fastp"]
@@ -24,6 +27,7 @@ LOAD_PICARD_TOOLS = config["tools"]["load_picard_tools"]
 LOAD_JAVA = config["tools"]["load_java_jdk"]
 LOAD_R = config["tools"]["load_r"]
 PICARD_TOOLS = config["tools"]["picard_tools"]
+MQ_sam_flags_script = config["tools"]["sam_flags_script"]
 
 rule all:
     input:
@@ -31,7 +35,8 @@ rule all:
         stats_2=expand(dedup_alignment + "{reference}/{sample}/{sample}.stats",sample=sample,reference=reference),
         index=expand(dedup_alignment + "{reference}/{sample}/{sample}.bam.bai",sample=sample,reference=reference),
         metrics = expand(picard_metrics + "{reference}/{sample}/{sample}.alignment_summary_metrics",sample=sample,reference=reference),
-        stats = expand(picard_metrics + "{reference}/{sample}/{sample}_idxstats",sample=sample,reference=reference)
+        stats = expand(picard_metrics + "{reference}/{sample}/{sample}_idxstats",sample=sample,reference=reference),
+        map_stats = expand(map_stats + "success/{reference}_{sample}_{chrm}.log",reference=reference,sample=sample,chrm=chr_list)
 
 rule fastp:
     input:
@@ -43,7 +48,7 @@ rule fastp:
         R_HTML = fastp_output + "{sample}/{sample}_fastp.html",
         R_JSON = fastp_output + "{sample}/{sample}_fastp.json"
     params:
-    	"-q 15 -u 40 -g"
+    "-q 15 -u 40 -g"
     shell:
         FASTP + " -i {input.R1} -o {output.R1_O} -I {input.R2} -O {output.R2_O} -h {output.R_HTML} -j {output.R_JSON} {params} >/dev/null"
 
@@ -52,9 +57,9 @@ checkpoint split_fastq:
         R1 = fastp_output + "{sample}/{sample}_R1.fastq.gz",
         R2 = fastp_output + "{sample}/{sample}_R2.fastq.gz"
     output:
-    	split_fastqs = temp(directory(split_fastq + "{sample}/"))
+        split_fastqs = temp(directory(split_fastq + "{sample}/"))
     params:
-    	prefix = split_fastq + "{sample}/{sample}_"
+        prefix = split_fastq + "{sample}/{sample}_"
     shell:
         LOAD_PYTHON_374 + FASTQ_SPLITTER + " -o {params.prefix} {input.R1} {input.R2}"
 
@@ -160,3 +165,13 @@ rule samtools_idxstats:
         stats = picard_metrics + "{reference}/{sample}/{sample}_idxstats"
     shell:
         LOAD_SAMTOOLS + " samtools idxstats {input.BAM} > {output.stats}"
+
+rule sam_flags:
+    input:
+        dedup_alignment + "{reference}/{sample}/{sample}.bam"
+    params:
+        map_stats + "MQ_sam_flag_reads.txt"
+    output:
+        map_stats + "success/{reference}_{sample}_{chrm}.log"
+    shell:
+        LOAD_SAMTOOLS + MQ_sam_flags_script + "{input} {output} {params} {wildcards.reference} {wildcards.sample} {wildcards.chrm}"
